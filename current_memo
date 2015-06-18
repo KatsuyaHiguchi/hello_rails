@@ -1,0 +1,6 @@
+*Goal_1
+Comment.where(entry_id: 1)
+
+*Goal_2
+ids = Comment.where(status: "unapproved").select(:entry_id)
+Entry.where(id: ids)
