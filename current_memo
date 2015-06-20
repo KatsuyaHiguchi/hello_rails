@@ -1,6 +1,17 @@
 *Goal_1
-Comment.where(entry_id: 1)
+ids = Entry.where(blog_id: 1).select(:id)
+Comment.where(entry_id: ids)
+
 
 *Goal_2
-ids = Comment.where(status: "unapproved").select(:entry_id)
-Entry.where(id: ids)
+ids = Entry.all.select(:blog_id).distinct
+Blog.where.not(id: ids)
+
+
+*Goal_3
+entry_ids = Comment.where(status: "unapproved").select(:entry_id).distinct
+blog_ids = Entry.where(id: entry_ids).select(:blog_id).distinct
+Blog.where(id: blog_ids)
+
+
+90min
