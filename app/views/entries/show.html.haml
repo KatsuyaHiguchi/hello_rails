@@ -8,5 +8,46 @@
   %strong Body:
   = @entry.body
 
-= link_to 'Edit', edit_entry_path(@entry) |
-= link_to 'Back', entries_path
+= link_to 'Edit', edit_blog_entry_path(@entry.blog, @entry) |
+= link_to 'Back', blog_path(@entry.blog)
+
+%h1 Listing Comments
+
+%table
+  %thead
+    %tr
+      %th Body
+      %th{:colspan => "2"}
+
+  %tbody
+    - @entry.comments.each do |comment|
+      %tr
+        - if comment.status == "approved"
+          %td= comment.body
+          %td= ""
+          %td= link_to 'Destroy', blog_entry_comment_path(@blog, @entry, comment), method: :delete, data: { confirm: 'Are you sure?' }
+        - else
+          %td= "（承認待ち）"
+          %td= link_to 'Approve', blog_entry_comment_path(@blog, @entry, comment), method: :patch
+          %td= link_to 'Destroy', blog_entry_comment_path(@blog, @entry, comment), method: :delete, data: { confirm: 'Are you sure?' }
+
+%br
+
+%h1 New Comment
+
+= form_for([@blog, @entry, @comment]) do |f|
+  - if @comment.errors.any?
+    %div{:id => "error_explanation"}
+      %h2= "#{pluralize(@comment.errors.count, "error")} prohibited this entry from being saved:"
+
+      %ul
+      - @comment.errors.full_messages.each do |message|
+        %li= message
+
+  %div{:class => "field"}
+    = f.label :body
+    %br
+    = f.text_area :body
+  %div{:class => "actions"}
+    = f.submit
+
